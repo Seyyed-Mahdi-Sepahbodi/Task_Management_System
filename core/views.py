@@ -5,7 +5,7 @@ from .serializers import ProjectSerializer, TaskSerializer
 from .permissions import IsProjectOwnerOrReadOnly
 from django.core.cache import cache
 from rest_framework.response import Response
-from .cache_keys import projects_list_key
+from .cache_keys import projects_list_key, tasks_list_key
 
 class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
@@ -57,6 +57,31 @@ class TaskViewSet(viewsets.ModelViewSet):
         project = self.get_project()
         return Task.objects.filter(project=project).order_by("-created_at")
 
+    def list(self, request, *args, **kwargs):
+        project = self.get_project()
+
+        query = request.get_full_path()
+        key = f"{tasks_list_key(project.id, request.user.id)}:{query}"
+
+        cached = cache.get(key)
+        if cached is not None:
+            return Response(cached)
+
+        response = super().list(request, *args, **kwargs)
+        cache.set(key, response.data, timeout=60)
+        return response
+
     def perform_create(self, serializer):
         project = self.get_project()
         serializer.save(project=project)
+        cache.delete(tasks_list_key(project.id, self.request.user.id))
+
+    def perform_update(self, serializer):
+        project = self.get_project()
+        serializer.save()
+        cache.delete(tasks_list_key(project.id, self.request.user.id))
+
+    def perform_destroy(self, instance):
+        project = self.get_project()
+        instance.delete()
+        cache.delete(tasks_list_key(project.id, self.request.user.id))
