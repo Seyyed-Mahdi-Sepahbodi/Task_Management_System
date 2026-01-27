@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Project, Task
+from .models import Project, Task
 
 class ProjectSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.id")

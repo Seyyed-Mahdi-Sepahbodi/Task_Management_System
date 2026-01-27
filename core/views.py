@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
-from models import Project, Task
-from serializers import ProjectSerializer, TaskSerializer
-from permissions import IsProjectOwnerOrReadOnly
+from .models import Project, Task
+from .serializers import ProjectSerializer, TaskSerializer
+from .permissions import IsProjectOwnerOrReadOnly
 
 class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer

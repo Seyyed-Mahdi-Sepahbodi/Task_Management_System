@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from def_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested.routers import NestedDefaultRouter
 from core.views import ProjectViewSet, TaskViewSet

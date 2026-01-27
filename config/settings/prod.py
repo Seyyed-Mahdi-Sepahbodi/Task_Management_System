@@ -1,4 +1,4 @@
-from base import *
+from .base import *
 DEBUG = False
 # Security hardening
 SECURE_SSL_REDIRECT = True
