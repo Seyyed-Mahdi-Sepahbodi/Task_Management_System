@@ -97,6 +97,17 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
+REST_FRAMEWORK.update({
+  "DEFAULT_THROTTLE_CLASSES": [
+      "rest_framework.throttling.UserRateThrottle",
+      "rest_framework.throttling.AnonRateThrottle",
+  ],
+  "DEFAULT_THROTTLE_RATES": {
+      "user": "200/hour",
+      "anon": "50/hour",
+  }
+})
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "Task Management API",
     "DESCRIPTION": "Projects and Tasks API with JWT auth",
