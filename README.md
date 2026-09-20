@@ -1,51 +1,46 @@
-# 🗂️ Task Management API
+# Task Management API
 
-A production-ready **Task Management REST API** built with **Django Rest Framework**, featuring JWT authentication, Redis caching, Dockerized setup, automated tests, and swagger documentation.
-
-This project is designed with **clean architecture**, **real-world permissions**, and **scalability** in mind.
+A REST API for managing tasks and projects, built on top of Django REST Framework. It handles JWT auth, Redis caching, runs in Docker, and ships with full test coverage and Swagger docs.
 
 ---
 
-## ✨ Features
+## Features
 
-- ✅ User Authentication (JWT)
-- ✅ Project & Task Management (CRUD)
-- ✅ Owner-based Permissions (secure access control)
-- ✅ Advanced Filtering, Search & Ordering
-- ✅ Redis Caching with Invalidation
-- ✅ Docker & Docker Compose
-- ✅ Automated Tests (pytest)
-- ✅ CI-ready setup
-- ✅ Swagger / OpenAPI Documentation
+- User Authentication (JWT)
+- Project & Task Management (CRUD)
+- Owner-based Permissions (secure access control)
+- Filtering, Search & Ordering
+- Redis Caching with Invalidation
+- Docker & Docker Compose
+- Automated Tests (pytest)
+- Swagger / OpenAPI Documentation
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 - **Backend:** Django, Django REST Framework
 - **Auth:** JWT (SimpleJWT)
 - **Database:** PostgreSQL
 - **Cache:** Redis
-- **Docs:** drf-spectacular (Swagger / OpenAPI)
+- **Docs:** drf-spectacular
 - **Testing:** pytest pytest-django
 - **Containerization:** Docker, Docker Compose
 
 ---
 
-## 📐 Architecture Overview
+## Architecture Overview
+Each user owns their own projects. Each project holds tasks. You can’t touch another user’s data — the queryset is scoped per user at every level.
 
-- Each **User** owns multiple **Projects**
-- Each **Project** contains multiple **Tasks**
-- User can only access **their own projects and tasks**
-- Task support:
-  - status (`todo`, `in_progress`, `done`)
-  - priority (`low`, `medium`, `high`)
-  - due dates
-  - optional assignee
+Tasks have:
+- Status: (`todo`, `in_progress`, `done`)
+- Priority: (`low`, `medium`, `high`)
+- Due dates
+- An optional assignee
 
 ---
 
-## 🔐 Authentication
+## Authentication
 
 JWT-based authentication using **SimpleJWT**.
 
@@ -71,7 +66,7 @@ Content-Type: application/json
 
 ---
 
-## 📁 API Endpoint
+## API Endpoint
 
 ### Projects
 
@@ -95,7 +90,7 @@ Content-Type: application/json
 
 ---
 
-## 🔍 Filtering, Search & Ordering
+## Filtering, Search & Ordering
 
 ### Tasks Filtering
 
@@ -121,36 +116,19 @@ Content-Type: application/json
 
 ---
 
-## 🚀 Swagger / API Documentation
+## API Docs
 
-Swagger UI is enabled via **drf-spectacular**.
-
-* Swagger UI:
-  👉 `GET /api/swagger/`
-
-* OpenAPI schema:
-  👉 `GET /api/schema/`
+Swagger UI lives at GET `/api/swagger/` and the raw OpenAPI schema is at GET `/api/schema/`.
 
 ---
 
-## ⚡ Redis Caching
+## Redis Caching
 
-* Cached endpoints:
-  * Porject list per user
-  * Task list per project
-* Cache keys are user-aware and query-aware
-* Automatic cache invalidation on:
-  * create
-  * update
-  * delete
-
-This significantly improves performance for list-heavy endpoints.
+Project lists and task lists are cached per user and per query string. Any write operation (create, update, delete) automatically clears the relevant cache. Makes a noticeable difference on list-heavy usage.
 
 ---
 
-## 🐳 Docker Setup
-
-### Development Environment
+## Running Locally
 
 ```bash
 docker compose -f docker-compose.yml up --build
@@ -158,68 +136,37 @@ docker compose -f docker-compose.yml up --build
 
 ---
 
-## 🧪 Running Tests (Dockerized)
+## Running Tests (Dockerized)
 
-Tests run **inside Docker Compose**, ensuring consistency across environments.
+Tests run inside Docker to keep the environment consistent:
 
 ```bash
 docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
 docker compose -f docker-compose.test.yml down -v
 ```
 
-### Test Coverage Includes
-
-* Authentication (register/login/refresh)
+### Covered:
+* Authentication (register/login/token refresh)
 * Permissions (owner-only access)
 * Project CRUD
 * Task CRUD
-* Filtering & access control
+* Filtering and access control
 
 ---
 
-## 🧠 Security Considerations
+## Security Considerations
 
 * JWT Authentication
 * Password validation enabled
 * Owner-based permissions
-* Queryset-level access control
+* Access is controlled at the queryset level, not just the view
 * Safe defaults for production settings
 
 ---
 
-## 📦 Environment Variables
+## Project Status
 
-Example `.env` file:
-
-```env
-SECRET_KEY=your-secret-key
-DEBUG=1
-ALLOWED_HOSTS=localhost,127.0.0.1
-
-DB_NAME=taskdb
-DB_USER=taskuser
-DB_PASSWORD=taskpass
-DB_HOST=db
-DB_PORT=5432
-
-REDIS_URL=redis://redis:6379/1
-```
-
----
-
-## 📌 Project Status
-
-✅ Core features completed
-✅ Dockerized
-✅ Cached & optimized
-✅ Tested & CI-ready
-🚀 Ready for extension (teams, roles, notifications, etc.)
-
----
-
-## 📄 License
-
-This project is open-source and intended for educational and portfolio purposes.
+Core features are done and working. It’s Dockerized, cached, tested, and CI-ready. Next steps could include teams, role-based permissions, or notifications — the structure supports it.
 
 ---
 
